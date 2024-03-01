@@ -1,4 +1,25 @@
 ## Assignment: Graphql
+
+### Task Description:
+Assignment: Graphql
+
+Link to the task:
+https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/graphql-service/assignment.md
+
+Deadline date: 2024-03-05
+
+
+Basic Scope
+    +144 1.1 npm run test-queries
+    +90 1.2 npm run test-mutations
+    +18 2.1 npm run test-rule
+    +80 3.1 npm run test-loader
+    +28 3.2 npm run test-loader-prime
+
+
+Total: 360/360
+
+
 ### Tasks:
 1. Add logic to the graphql endpoint: ./src/routes/graphql.  
 Constraints and logic for gql queries should be done based on restful implementation.  

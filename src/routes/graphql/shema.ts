@@ -4,6 +4,8 @@ import { buildSchema } from 'graphql/utilities/index.js';
 export const schemaQ = null;
 
 export const schema: GraphQLSchema = buildSchema(`
+  scalar UUID
+
   enum MemberTypeId {
     basic
     business
@@ -66,4 +68,59 @@ export const schema: GraphQLSchema = buildSchema(`
     usersSubscribedTo: [UserSubscribedToList]
     subscribedToUsers: [SubscribedToUserList]
   }
+  
+  # Mutations:
+    
+  input CreatePostInput {
+    authorId: String
+    title: String
+    content: String
+  }
+  
+  input CreateUserInput {
+    name: String
+    balance: Float
+  }
+  
+  input CreateProfileInput {
+    userId: String
+    memberTypeId: String
+    isMale: Boolean
+    yearOfBirth: Int
+  }
+  
+  input ChangePostInput {
+    authorId: String
+    title: String
+    content: String
+  }
+  
+  input ChangeUserInput {
+    name: String
+    balance: Float
+  }
+  
+  input ChangeProfileInput {
+    memberTypeId: String
+    userId: String
+    isMale: Boolean
+    yearOfBirth: Int
+  }
+  
+  type Mutation {
+    createUser(dto: CreateUserInput): User
+    changeUser(id: UUID!, dto: ChangeUserInput): User
+    deleteUser(id: UUID!): Boolean
+    
+    createProfile(dto: CreateProfileInput): Profile
+    changePost(id: UUID!, dto: ChangePostInput): Post
+    deleteProfile(id: UUID!): Boolean
+    createPost(dto: CreatePostInput): Post
+    deletePost(id: UUID!): Boolean
+    changeProfile(id: UUID!, dto: ChangeProfileInput): Profile
+  
+    subscribeTo(userId: UUID!, authorId: UUID!): User
+    unsubscribeFrom(userId: UUID!, authorId: UUID!): Boolean
+  }
+  
 `);

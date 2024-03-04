@@ -5,7 +5,7 @@
 
 import { UUID } from 'crypto';
 
-export const resolver = (prisma) => {
+export const queryResolver = (prisma) => {
   return {
     users: async () => {
       return await prisma.user.findMany({

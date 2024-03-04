@@ -4,16 +4,30 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import { UUID } from 'crypto';
+import { User } from '../types/types.js';
+import { completeResolvers, UserModel } from '../models/user.model.js';
 
 export const queryResolver = (prisma) => {
   return {
     users: async () => {
-      return await prisma.user.findMany({
-        include: userInclude,
+      const usersData: User[] = await prisma.user.findMany({
+        include: {
+          ...userInclude,
+          subscribedToUser: { select: { subscriber: { include: { userSubscribedTo: true } } } },
+          userSubscribedTo: { select: { author: { include: { subscribedToUser: true } } } },
+        },
       });
+      await completeResolvers(prisma);
+
+      return usersData.map((user: User) => new UserModel(user));
     },
+    // users: async () => {
+    //   return await prisma.user.findMany({
+    //     include: userInclude,
+    //   });
+    // },
     user: async ({ id }: { id: UUID }) => {
-      const result = await prisma.user.findUnique({
+      const userData = await prisma.user.findUnique({
         where: { id },
         include: userInclude,
       });
@@ -52,15 +66,11 @@ export const queryResolver = (prisma) => {
         };
       });
 
-      if (result === null) {
-        return result;
+      if (userData === null) {
+        return userData;
       }
 
-      return {
-        ...result,
-        userSubscribedTo,
-        subscribedToUser,
-      };
+      return { ...userData, userSubscribedTo, subscribedToUser };
     },
 
     profiles: () => {
@@ -81,7 +91,8 @@ export const queryResolver = (prisma) => {
       return prisma.post.findMany();
     },
     post: async ({ id }: { id: UUID }) => {
-      return await prisma.post.findUnique({ where: { id: id } });
+      const post = await prisma.post.findMany({ where: { id: id } });
+      return post.length === 0 ? null : { ...post[0] }
     },
   };
 };

@@ -84,7 +84,8 @@ export const queryResolver = (prisma) => {
       return prisma.memberType.findMany();
     },
     memberType: async ({ id }: { id: UUID }) => {
-      return await prisma.memberType.findUnique({ where: { id: id } });
+      const type = await prisma.memberType.findMany({ where: { id: id } });
+      return type.length === 0 ? null : { ...type[0] };
     },
 
     posts: () => {
